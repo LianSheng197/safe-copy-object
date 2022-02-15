@@ -1,0 +1,19 @@
+{
+  "name": "safe-copy-object",
+  "version": "0.1.0",
+  "description": "Safely copy an object",
+  "main": "src/index.js",
+  "author": "LianSheng197",
+  "license": "MIT",
+  "homepage": "https://github.com/LianSheng197/safe-copy-object",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LianSheng197/safe-copy-object.git"
+  }
+}

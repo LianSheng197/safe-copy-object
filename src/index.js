@@ -45,7 +45,7 @@
  * @param {Object} obj
  * @param {Config} cfg
  */
- function safeCopy(obj, cfg) {
+function safeCopy(obj, cfg) {
     /**@type {Config} */
     let config = {
         original: false,
@@ -53,7 +53,7 @@
             onCircular: wrapper => "[Circular]",
             onDate: date => `<Date: ${date}>`,
             onError: error => `<Error: ${error.name}, ${error.message}>`,
-            onFunction: func => `<Function: ${func.name}>`
+            onFunction: null
         }
     }
 
