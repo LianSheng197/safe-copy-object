@@ -1,0 +1,7 @@
+.history/
+.vscode/
+node_modules/
+temp/
+coverage/
+
+package-lock.json
