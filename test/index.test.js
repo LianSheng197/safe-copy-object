@@ -6,7 +6,7 @@ const expect = jestGlobal.expect;
 const safeCopy = require("../src").safeCopy;
 
 describe("Safe copy", () => {
-    let original = {
+    let originalObject = {
         get a() {
             return this;
         },
@@ -20,14 +20,14 @@ describe("Safe copy", () => {
     };
 
     it("Using default config", () => {
-        let result = safeCopy(original);
+        let result = safeCopy(originalObject);
         let resultString = JSON.stringify(result);
 
         expect(resultString).toEqual('{"a":"[Circular]","b":"<Date: 1600000000000>","c":"<Function: c>","d":"<Function: f>"}');
     });
 
     it("Using custom config (original is false)", () => {
-        let result = safeCopy(original, {
+        let result = safeCopy(originalObject, {
             original: false,
             replacer: {
                 onCircular: wrapper => `[CUSTOM_CIRCULAR - thisCount: ${wrapper.count}, firstRef: ${wrapper.reference}]`,
@@ -43,12 +43,12 @@ describe("Safe copy", () => {
     });
 
     it("Using custom config (original is true)", () => {
-        let result = safeCopy(original, {
+        let result = safeCopy(originalObject, {
             original: true
         });
 
         expect(result.a).toEqual(result);
-        expect(result.b.getTime()).toEqual(original.b.getTime());
-        expect(result.d.name).toEqual(original.d.name);
+        expect(result.b.getTime()).toEqual(originalObject.b.getTime());
+        expect(result.d.name).toEqual(originalObject.d.name);
     });
 });

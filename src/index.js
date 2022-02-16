@@ -32,7 +32,7 @@ const CircularObjectWrapper = require("./circularObjectWrapper").CircularObjectW
  * Copy an object safety.
  * 
  * @param {Object} sourceObject
- * @param {Config} config
+ * @param {Config} customConfig
  */
 function safeCopy(sourceObject, customConfig) {
     /**@type {Config} */
@@ -49,7 +49,7 @@ function safeCopy(sourceObject, customConfig) {
         // Config
         ["original"].forEach(key => {
             if (customConfig[key]) {
-                config[key] = customConfig[key]
+                config[key] = customConfig[key];
             }
         });
 
@@ -69,7 +69,7 @@ function safeCopy(sourceObject, customConfig) {
     /** @type {Array<CircularObjectWrapper>} */
     let store = [];
 
-    return visit(sourceObject, false);
+    return visit(sourceObject, config.original);
 
     /**
      * Avoid faulty define getter properties.
@@ -82,7 +82,7 @@ function safeCopy(sourceObject, customConfig) {
             try {
                 return obj[property];
             } catch (e) {
-                return e.message;
+                return `[ERROR: ${e.message}]`;
             }
         }
 
@@ -92,15 +92,13 @@ function safeCopy(sourceObject, customConfig) {
     /**
      * Visit all properties.
      * 
-     * @param {Object} obj
+     * @param {*} obj
      * @param {Boolean} isOriginal
      * @param {String} [path]
      */
     function visit(obj, isOriginal, path = "") {
         // If this property is Function.
         if (typeof obj === 'function') {
-            store.pop();
-
             if (isOriginal) {
                 return obj;
             }
@@ -117,11 +115,12 @@ function safeCopy(sourceObject, customConfig) {
         let cc = store.filter(w => w.circularObject === obj);
         if (cc.length !== 0) {
             if (isOriginal) {
-                return obj.toJSON;
-            } else {
-                let wrapper = new CircularObjectWrapper(cc[0].reference, ++cc[0].count, obj);
-                return config.replacer.onCircular(wrapper);
+                return obj;
             }
+
+            let wrapper = new CircularObjectWrapper(cc[0].reference, ++cc[0].count, obj);
+
+            return config.replacer.onCircular(wrapper);
         }
 
         store.push(new CircularObjectWrapper(path, 0, obj));
@@ -183,13 +182,19 @@ function safeCopy(sourceObject, customConfig) {
 
 module.exports.safeCopy = safeCopy;
 
-let original = {
+let originalObject = {
+    get a() {
+        return this;
+    },
+    b: new Date(1600000000000),
     c: function () {
         throw new Error("ERROR_MESSAGE")
     },
-    d: function () {
-        throw new Error("ERROR_MESSAGE")
+    d: function f(x) {
+        return 1
     }
 };
 
-console.log(safeCopy(original));
+console.log(safeCopy(originalObject, {
+    original: true
+}));
