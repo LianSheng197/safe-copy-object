@@ -181,20 +181,3 @@ function safeCopy(sourceObject, customConfig) {
 }
 
 module.exports.safeCopy = safeCopy;
-
-let originalObject = {
-    get a() {
-        return this;
-    },
-    b: new Date(1600000000000),
-    c: function () {
-        throw new Error("ERROR_MESSAGE")
-    },
-    d: function f(x) {
-        return 1
-    }
-};
-
-console.log(safeCopy(originalObject, {
-    original: true
-}));
