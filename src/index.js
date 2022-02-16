@@ -1,9 +1,4 @@
-/**
- * @typedef CircularObjectWrapper
- * @property {String} reference
- * @property {Number} count
- * @property {Object} circularObject
- */
+const CircularObjectWrapper = require("./circularObjectWrapper");
 
 /**
  * @callback ConfigReplacerOnCircular
@@ -51,9 +46,9 @@ function safeCopy(obj, cfg) {
         original: false,
         replacer: {
             onCircular: wrapper => "[Circular]",
-            onDate: date => `<Date: ${date}>`,
+            onDate: date => `<Date: ${date.getTime()}>`,
             onError: error => `<Error: ${error.name}, ${error.message}>`,
-            onFunction: null
+            onFunction: func => `<Function: ${func.name}>`
         }
     }
 
