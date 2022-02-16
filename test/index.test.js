@@ -23,7 +23,7 @@ describe("Safe copy", () => {
         let result = safeCopy(original);
         let resultString = JSON.stringify(result);
 
-        expect(resultString).toEqual('{"a":"[Circular]","b":"<Date: 1600000000000>","c":"<Error: Error, ERROR_MESSAGE","d":"<Function: f>"}');
+        expect(resultString).toEqual('{"a":"[Circular]","b":"<Date: 1600000000000>","c":"<Function: c>","d":"<Function: f>"}');
     });
 
     it("Using custom config (original is false)", () => {
@@ -32,7 +32,6 @@ describe("Safe copy", () => {
             replacer: {
                 onCircular: wrapper => `[CUSTOM_CIRCULAR - thisCount: ${wrapper.count}, firstRef: ${wrapper.reference}]`,
                 onDate: date => date.getTime(),
-                onError: error => error.message,
                 onFunction: func => "[CUSTOM_FUNCTION]",
                 thisKeyIsNotSupport: "This key is not support"
             }
@@ -40,7 +39,7 @@ describe("Safe copy", () => {
 
         let resultString = JSON.stringify(result);
 
-        expect(result).toEqual('{"a":"[CUSTOM_CIRCULAR - thisCount: 1, firstRef: .]","b":1600000000000,"c":"ERROR_MESSAGE","d":"[CUSTOM_FUNCTION]"}');
+        expect(resultString).toEqual('{"a":"[CUSTOM_CIRCULAR - thisCount: 1, firstRef: ]","b":1600000000000,"c":"[CUSTOM_FUNCTION]","d":"[CUSTOM_FUNCTION]"}');
     });
 
     it("Using custom config (original is true)", () => {
@@ -50,7 +49,6 @@ describe("Safe copy", () => {
 
         expect(result.a).toEqual(result);
         expect(result.b.getTime()).toEqual(original.b.getTime());
-        expect(result.c).toThrow("ERROR_MESSAGE");
         expect(result.d.name).toEqual(original.d.name);
     });
 });

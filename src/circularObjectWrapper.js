@@ -11,4 +11,4 @@ class CircularObjectWrapper {
     }
 }
 
-module.exports = CircularObjectWrapper;
+module.exports.CircularObjectWrapper = CircularObjectWrapper;
